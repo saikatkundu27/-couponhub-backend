@@ -6,17 +6,13 @@ const { sendReportMail } = require("../utils/email");
 
 exports.getStats = async (req, res, next) => {
   try {
-    const categoryWiseSales = await getSalesCount("category");
-    const sourcePlatformWiseSales = await getSalesCount("sourcePlatform");
-    const redeemPlatformWiseSales = await getSalesCount("redeemPlatform");
+    const [categoryStats, redeemStats, sourceStats] = await Promise.all([
+      getSalesCount("category"),
+      getSalesCount("redeemPlatform"),
+      getSalesCount("sourcePlatform"),
+    ]);
 
-    return res
-      .status(200)
-      .json({
-        categoryWiseSales,
-        sourcePlatformWiseSales,
-        redeemPlatformWiseSales,
-      });
+    return res.status(200).json({ categoryStats, redeemStats, sourceStats });
   } catch (error) {
     next(error);
   }
