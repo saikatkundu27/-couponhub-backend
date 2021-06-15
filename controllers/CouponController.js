@@ -6,7 +6,7 @@ const { sendReportMail } = require("../utils/email");
 exports.createCoupon = async (req, res, next) => {
   try {
     //check if coupon code exists:
-    const coupon = await Coupon.findOne({ code: req.body.code });
+    const coupon = await Coupon.findOne({ code: req.body.code }).lean();
     if (coupon) {
       throw new BadRequest("Coupon Code already exists");
     } else {
