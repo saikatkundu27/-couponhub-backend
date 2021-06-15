@@ -1,23 +1,30 @@
 const Coupon = require("../models/coupon.model");
 const User = require("../models/user.model");
-const { NotFound, BadRequest, Unauthorized } = require("../utils/error");
+const { NotFound, BadRequest } = require("../utils/error");
 const { sendReportMail } = require("../utils/email");
 
 exports.createCoupon = async (req, res, next) => {
   try {
-    //create new coupon
-    await new Coupon({
-      ...req.body,
-      postedBy: req.user._id,
-    }).save();
+    //check if coupon code exists:
+    const coupon = await Coupon.findOne({ code: req.body.code });
+    if (coupon) {
+      throw new BadRequest("Coupon Code already exists");
+    } else {
+      //create new coupon
+      await new Coupon({
+        ...req.body,
+        postedBy: req.user._id,
+      }).save();
 
-    //increase user credits by 1
-    await User.findByIdAndUpdate(req.user._id, { $inc: { credits: 1 } });
+      //increase user credits by 1
+      await User.findByIdAndUpdate(req.user._id, { $inc: { credits: 1 } });
 
-    //send response
-    return res.status(201).json({
-      message: "Coupon created successfully , 1 credit added to your account!",
-    });
+      //send response
+      return res.status(201).json({
+        message:
+          "Coupon created successfully , 1 credit added to your account!",
+      });
+    }
   } catch (error) {
     next(error);
   }
