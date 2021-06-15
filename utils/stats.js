@@ -6,7 +6,7 @@ exports.getSalesCount = (type) =>
       { $group: { _id: { $toUpper: `$${type}` }, count: { $sum: 1 } } },
     ])
       .then((data) =>
-        resolve(data.map((item) => ({ name: [item._id], count: item.count })))
+        resolve(data.map((item) => ({ name: item._id, count: item.count })))
       )
       .catch((err) => reject(err));
   });
