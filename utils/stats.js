@@ -5,6 +5,8 @@ exports.getSalesCount = (type) =>
     Coupon.aggregate([
       { $group: { _id: { $toUpper: `$${type}` }, count: { $sum: 1 } } },
     ])
-      .then((data) => resolve(data.map((item) => ({ [item._id]: item.count }))))
+      .then((data) =>
+        resolve(data.map((item) => ({ name: [item._id], count: item.count })))
+      )
       .catch((err) => reject(err));
   });
