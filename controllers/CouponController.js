@@ -1,7 +1,26 @@
 const Coupon = require("../models/coupon.model");
 const User = require("../models/user.model");
 const { NotFound, BadRequest } = require("../utils/error");
+const { getSalesCount } = require("../utils/stats");
 const { sendReportMail } = require("../utils/email");
+
+exports.getStats = async (req, res, next) => {
+  try {
+    const categoryWiseSales = await getSalesCount("category");
+    const sourcePlatformWiseSales = await getSalesCount("sourcePlatform");
+    const redeemPlatformWiseSales = await getSalesCount("redeemPlatform");
+
+    return res
+      .status(200)
+      .json({
+        categoryWiseSales,
+        sourcePlatformWiseSales,
+        redeemPlatformWiseSales,
+      });
+  } catch (error) {
+    next(error);
+  }
+};
 
 exports.createCoupon = async (req, res, next) => {
   try {
