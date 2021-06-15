@@ -4,9 +4,17 @@ const {
   listCoupons,
   buyCoupon,
   reportCoupon,
+  getStats,
 } = require("../controllers/CouponController");
 const { isAuthenticated, isVerified } = require("../middlewares/auth");
 const { filterCoupons } = require("../middlewares/filter");
+
+/**
+ * @route GET /api/coupons/stats
+ * @access public
+ */
+
+router.get("/stats", getStats);
 
 /**
  * @route POST /api/coupons/create

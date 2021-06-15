@@ -5,6 +5,7 @@ const couponSchema = new mongoose.Schema(
     code: {
       type: String,
       required: [true, "Coupon Code is required!"],
+      unique: true,
     },
     expiryDate: {
       type: Date,
